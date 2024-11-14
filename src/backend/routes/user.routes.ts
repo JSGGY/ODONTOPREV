@@ -30,5 +30,37 @@ router.get("/api/users", async (req: Request, res: Response) => {
     }
 });
 
+router.post("/api/user/:id", async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const user = await prisma.user.create({
+            data: {
+                id,
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password,
+            },
+        });
+        res.json(user);
+    } catch (error: unknown) {
+        handleError(error, res);
+    }
+});
 
 
+router.delete("/api/user/:id", async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const user = await prisma.user.delete({
+            where: {
+                id,
+            },
+        });
+        res.json(user);
+    } catch (error: unknown) {
+        handleError(error, res);
+    }
+});
+
+
+export default router;
