@@ -12,7 +12,7 @@
 html, body {
   height: 100%; /* Asegura que el body ocupe el 100% de la altura */
   margin: 0;    /* Elimina márgenes por defecto */
-  background: linear-gradient(to right, #E1E1E1, #A9D6E5);
+  background: linear-gradient(to right, #fff6f6,#A9D6E5);
 
 }
 
