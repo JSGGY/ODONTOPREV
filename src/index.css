@@ -8,8 +8,17 @@
   }
 }
 
-@layer utilities {
-  .bg-gradient-dental {
-    background-image: linear-gradient(to bottom right, #E0F7FA, #E1F5FE);
-  }
+/* index.css o tailwind.css */
+html, body {
+  height: 100%; /* Asegura que el body ocupe el 100% de la altura */
+  margin: 0;    /* Elimina márgenes por defecto */
+  background: linear-gradient(to right, #E1E1E1, #A9D6E5);
+
+}
+
+
+/* Para asegurar que el fondo gradiente se aplique correctamente */
+.bg-gradient-custom {
+  background-image: linear-gradient(to bottom right, #ffffff, #daf7b1);
+  height: 100%;  /* Asegura que el fondo ocupe toda la altura de la pantalla */
 }

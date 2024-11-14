@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Login from "./Login";
+import Login from "./LoginPage";
 
 function RootLayout() {
   return (
