@@ -1,163 +1,122 @@
 import React, { useState } from 'react';
-import { Button, TextField, Checkbox, FormControlLabel, Typography, Box, Container, InputAdornment } from '@mui/material';
-import { LogInIcon, MailIcon, LockIcon } from 'lucide-react';
-import { Logo } from '../components/Logo';
-import { Footer } from '../components/Footer';
-import loginImage from '../assets/mouth-1437426_1280.jpg';
+import { Box, Container, Typography, Button } from '@mui/material';
+import LoginForm from '../components/LoginForm';  // Asegúrate de importar tu formulario de login
+import RegisterForm from '../components/RegisterForm';  // Asegúrate de importar tu formulario de registro
+import loginImage from '../assets/chair-2584260_1920.jpg';  // Importar la imagen
 
-export function Login() {
+export function Main() {
+  const [isLogin, setIsLogin] = useState(true);  // Estado para alternar entre Login y Register
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError('Por favor ingrese todos los campos');
-      return;
-    }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Por favor ingrese un correo electrónico válido');
-      return;
-    }
-    setError('');
-    console.log('Formulario enviado', { email, password });
+  const handleSubmit = (data: any) => {
+    console.log('Datos recibidos:', data);
   };
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 0,
-      }}
-    >
+    <Container maxWidth="lg">
       <Box
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          width: { xs: '100%', sm: '90%', md: '80%' },
-          height: { xs: 'auto', md: '125vh' },
-          boxShadow: 10,
-          borderRadius: 2,
+          alignItems: 'stretch',  // Asegura que ambas cajas tengan la misma altura
+          justifyContent: 'center',
+          height: '100vh',  // Altura total de la ventana
+          maxWidth: '80%',
+          margin: '0 auto',
           overflow: 'hidden',
         }}
       >
-        {/* Formulario */}
+        {/* Formulario a la izquierda con 50% del ancho en pantallas grandes */}
         <Box
           sx={{
-            width: { xs: '100%', md: '60%' },
-            padding: { xs: 3, sm: 5 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            width: { xs: '100%', md: '50%' },
+            padding: 2,
             backgroundColor: 'white',
+            boxShadow: 2,
+            borderRadius: 2,
+            height: '100%',  // La altura de esta caja es 100% para igualarla a la otra
+            overflow: 'hidden',
+            transition: 'transform 0.5s ease-in-out',
+            transform: isLogin ? 'translateX(0)' : 'translateX(100%)',
           }}
         >
-          <Logo />
-          <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: 'bold', fontFamily: 'Roboto, sans-serif' }}>
-            Iniciar sesión
+          <Typography variant="h4" sx={{ marginBottom: 2, fontWeight: 'bold' }}>
+            {isLogin ? 'Iniciar sesión' : 'Crear cuenta'}
           </Typography>
-          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '360px' }}>
-            {/* Campo de Correo Electrónico */}
-            <TextField
-              label="Correo Electrónico"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              error={!!error}
-              helperText={error && 'Correo no válido'}
-              placeholder=" ejemplo@clinica.com"
-              required
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <MailIcon className="h-5 w-5 text-gray-400" />
-                      <Box component="span" sx={{ mx: 1, borderLeft: '1px solid #ccc', height: '24px' }} />
-                    </Box>
-                  </InputAdornment>
-                ),
-              }}
-            />
 
-            {/* Campo de Contraseña */}
-            <TextField
-              label="Contraseña"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder=" ••••••••"
-              required
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <LockIcon className="h-5 w-5 text-gray-400" />
-                      <Box component="span" sx={{ mx: 1, borderLeft: '1px solid #ccc', height: '24px' }} />
-                    </Box>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            {/* Mensaje de error */}
-            {error && (
-              <Typography color="error" variant="body2" align="center" sx={{ marginTop: 1 }}>
-                {error}
-              </Typography>
+          {/* Caja para el formulario (desplazable) */}
+          <Box
+            sx={{
+              width: '100%',
+              overflowY: 'auto',
+              maxHeight: 'calc(100vh - 150px)',  // Limita la altura del formulario
+              padding: 2,
+            }}
+          >
+            {/* Formulario de Login o Registro */}
+            {isLogin ? (
+              <LoginForm
+                email={email}
+                password={password}
+                setEmail={setEmail}
+                setPassword={setPassword}
+                onSubmit={handleSubmit}
+                error={error}
+              />
+            ) : (
+              <RegisterForm
+                email={email}
+                password={password}
+                username={username}
+                setEmail={setEmail}
+                setPassword={setPassword}
+                setUsername={setUsername}
+                onSubmit={handleSubmit}
+                error={error}
+              />
             )}
+          </Box>
 
-            {/* Recordarme */}
-            <FormControlLabel control={<Checkbox />} label="Recordarme" sx={{ marginY: 1 }} />
-
-            {/* Botón de iniciar sesión */}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ marginTop: 2 }}
-              startIcon={<LogInIcon />}
-            >
-              Iniciar Sesión
-            </Button>
-          </form>
-
-          {/* Mensaje adicional abajo */}
-          <Typography variant="body2" color="textSecondary" align="center" sx={{ marginTop: 3 }}>
-            ¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>
-          </Typography>
-
-          <Footer />
+          {/* Botón para cambiar entre Login y Register */}
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{
+              marginTop: 1,
+              padding: '10px',
+              fontWeight: 'bold',
+              backgroundColor: '#1976d2',
+              '&:hover': {
+                backgroundColor: '#1565c0',
+              },
+            }}
+            onClick={() => setIsLogin((prev) => !prev)}  // Alternar entre login y registro
+          >
+            {isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
+          </Button>
         </Box>
 
-        {/* Esthetic Line Divider */}
+        {/* Caja de la imagen con 50% de ancho */}
         <Box
           sx={{
-            width: '1.2px',
-            backgroundColor: '#292323',
-            marginX: 0.00,
-          }}
-        />
-
-        {/* Imagen */}
-        <Box
-          sx={{
-            width: { xs: '100%', md: '45%' },
-            height: { xs: '200px', md: '100%' },
+            flex: 1,
+            display: { xs: 'none', md: 'block' },
             backgroundImage: `url(${loginImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            height: '100vh',  // Altura de la imagen es 100vh para igualarla con el formulario
+            maxWidth: '50%',
+            overflow: 'hidden',
+            borderRadius: '20px',
+            transition: 'transform 0.5s ease-in-out',
+            transform: isLogin ? 'translateX(0)' : 'translateX(-100%)',
           }}
         />
       </Box>
@@ -165,4 +124,4 @@ export function Login() {
   );
 }
 
-export default Login;
+export default Main;
