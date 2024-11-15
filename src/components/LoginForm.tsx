@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { MailIcon, LockIcon, LogInIcon } from 'lucide-react';
-import CryptoJS from 'crypto-js';  // Importamos crypto-js para el hashing
 import { supabase } from '../supabase/supabaseClient';  // Asegúrate de que supabase esté correctamente configurado
 import { Logo } from './Logo';  // Asegúrate de tener este componente
 import { Footer } from './Footer';  // Asegúrate de tener este componente
@@ -21,12 +20,12 @@ export function LoginForm({ handleSubmit }: any) {
     return regex.test(email);
   };
 
-// Función para validar la contraseña
-const validatePassword = (password: string) => {
-  // Expresión regular modificada
-  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.\-/@])[A-Za-z\d.\-/@]{7,}$/;
-  return regex.test(password);
-};
+  // Función para validar la contraseña
+  const validatePassword = (password: string) => {
+    // Expresión regular modificada
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.\-/@])[A-Za-z\d.\-/@]{7,}$/;
+    return regex.test(password);
+  };
 
   // Verificamos si el formulario es válido
   useEffect(() => {
@@ -35,7 +34,7 @@ const validatePassword = (password: string) => {
 
     // El formulario es válido si el correo y la contraseña cumplen con las validaciones
     setIsFormValid(isEmailValid && isPasswordValid);
-    
+
     // Validación de correo electrónico
     if (!isEmailValid) {
       setEmailError('Correo electrónico no válido');
@@ -53,29 +52,32 @@ const validatePassword = (password: string) => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginError('');  // Limpiar error de login
+    setLoginError(''); // Limpiar error de login
 
-    // Hasheamos la contraseña
-    const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64);
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-    // Llamada a Supabase para autenticar al usuario
-    // Descomenta cuando tengas la base de datos configurada.
-    /*
-    const { user, session, error } = await supabase.auth.signInWithPassword({
-      email,
-      password: hashedPassword, // Usar la contraseña hasheada
-    });
+      const data = await response.json();
 
-    if (error) {
-      setLoginError(error.message);  // Mostrar error si algo falla
-    } else {
-      console.log('Usuario autenticado', user);
-      handleSubmit(user, session); // Pasa la información al componente principal si el login es exitoso
+      if (response.ok) {
+        console.log('Usuario autenticado', data.user);
+        handleSubmit(data.user);
+      } else {
+        setLoginError(data.message);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      setLoginError('Error en la conexión con el servidor');
     }
-    */
-
-    // Para fines visuales, solo pasamos los datos como ejemplo
-    handleSubmit({ email, password: hashedPassword });
   };
 
   return (
@@ -113,12 +115,12 @@ const validatePassword = (password: string) => {
           }}
         />
         {loginError && <Typography color="error">{loginError}</Typography>}
-        <Button 
-          type="submit" 
-          variant="contained" 
-          color="primary" 
-          fullWidth 
-          startIcon={<LogInIcon />} 
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          startIcon={<LogInIcon />}
           disabled={!isFormValid}  // Deshabilitar si el formulario no es válido
         >
           Iniciar Sesión
