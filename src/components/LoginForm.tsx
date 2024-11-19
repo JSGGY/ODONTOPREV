@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { MailIcon, LockIcon, LogInIcon } from 'lucide-react';
-import CryptoJS from 'crypto-js';  // Importamos crypto-js para el hashing // Asegúrate de que supabase esté correctamente configurado
+import CryptoJS from 'crypto-js';  // Importamos crypto-js para el hashing
+import { useNavigate } from 'react-router-dom';  // Importamos useNavigate para la redirección
 import { Logo } from './Logo';  // Asegúrate de tener este componente
 import { Footer } from './Footer';  // Asegúrate de tener este componente
 
@@ -13,36 +14,33 @@ export function LoginForm({ handleSubmit }: any) {
   const [passwordError, setPasswordError] = useState('');
   const [isFormValid, setIsFormValid] = useState(false); // Estado para habilitar el botón
 
+  const navigate = useNavigate();  // Inicializamos useNavigate
+
   // Función para validar el formato del correo
   const validateEmail = (email: string) => {
-    // Expresión regular modificada para permitir '.', '@' y '/'
     const regex = /^[a-zA-Z0-9._/-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return regex.test(email);
   };
 
-// Función para validar la contraseña
-const validatePassword = (password: string) => {
-  // Expresión regular modificada
-  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.\-/@])[A-Za-z\d.\-/@]{7,}$/;
-  return regex.test(password);
-};
+  // Función para validar la contraseña
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.\-/@])[A-Za-z\d.\-/@]{7,}$/;
+    return regex.test(password);
+  };
 
   // Verificamos si el formulario es válido
   useEffect(() => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
 
-    // El formulario es válido si el correo y la contraseña cumplen con las validaciones
     setIsFormValid(isEmailValid && isPasswordValid);
     
-    // Validación de correo electrónico
     if (!isEmailValid) {
       setEmailError('Correo electrónico no válido');
     } else {
       setEmailError('');
     }
 
-    // Validación de contraseña
     if (!isPasswordValid) {
       setPasswordError('La contraseña debe tener al menos 7 caracteres');
     } else {
@@ -54,27 +52,14 @@ const validatePassword = (password: string) => {
     e.preventDefault();
     setLoginError('');  // Limpiar error de login
 
-    // Hasheamos la contraseña
-    const hashedPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Base64);
-
-    // Llamada a Supabase para autenticar al usuario
-    // Descomenta cuando tengas la base de datos configurada.
-    /*
-    const { user, session, error } = await supabase.auth.signInWithPassword({
-      email,
-      password: hashedPassword, // Usar la contraseña hasheada
-    });
-
-    if (error) {
-      setLoginError(error.message);  // Mostrar error si algo falla
+    // Comprobamos si las credenciales son correctas
+    if (email === 'lagh@yahoo.com' && password === 'milo2315.') {
+      // Si las credenciales son correctas, redirigimos a la página principal
+      navigate('/main');  // Cambia '/main' por la ruta que necesitas
     } else {
-      console.log('Usuario autenticado', user);
-      handleSubmit(user, session); // Pasa la información al componente principal si el login es exitoso
+      // Si las credenciales son incorrectas, mostramos un error
+      setLoginError('Correo o contraseña incorrectos');
     }
-    */
-
-    // Para fines visuales, solo pasamos los datos como ejemplo
-    handleSubmit({ email, password: hashedPassword });
   };
 
   return (
@@ -93,7 +78,7 @@ const validatePassword = (password: string) => {
           error={!!emailError}  // Mostrar error si es inválido
           helperText={emailError}  // Mensaje de error si el correo es inválido
           InputProps={{
-            startAdornment: <MailIcon style={{ marginRight: '8px' }} />,  // Agregamos margen al icono
+            startAdornment: <MailIcon style={{ marginRight: '8px' }} />,
           }}
         />
         <TextField
@@ -105,10 +90,10 @@ const validatePassword = (password: string) => {
           margin="normal"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          error={!!passwordError}  // Mostrar error si es inválido
-          helperText={passwordError}  // Mensaje de error si la contraseña no es válida
+          error={!!passwordError}
+          helperText={passwordError}
           InputProps={{
-            startAdornment: <LockIcon style={{ marginRight: '8px' }} />,  // Agregamos margen al icono
+            startAdornment: <LockIcon style={{ marginRight: '8px' }} />,
           }}
         />
         {loginError && <Typography color="error">{loginError}</Typography>}
@@ -118,7 +103,7 @@ const validatePassword = (password: string) => {
           color="primary" 
           fullWidth 
           startIcon={<LogInIcon />} 
-          disabled={!isFormValid}  // Deshabilitar si el formulario no es válido
+          disabled={!isFormValid}
         >
           Iniciar Sesión
         </Button>
