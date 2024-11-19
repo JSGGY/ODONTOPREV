@@ -19,13 +19,13 @@ export function RegisterForm({ handleSubmit }: any) {
 
   // Validación de la contraseña
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[./@])[A-Za-z0-9./@]{7,12}$/;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{7,}$/;
     return regex.test(password);
   };
 
   // Validación del correo electrónico
   const validateEmail = (email: string) => {
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    const regex = /^[a-zA-Z0-9._/-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return regex.test(email);
   };
 
@@ -90,7 +90,19 @@ export function RegisterForm({ handleSubmit }: any) {
       <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: 'bold' }}>Crear cuenta</Typography>
       <form onSubmit={onSubmit} style={{ width: '100%', maxWidth: '360px' }}>
         <TextField
-          label="Nombre de usuario"
+          label="Nombre del Personal"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          InputProps={{
+            startAdornment: <UserIcon style={{ marginRight: '8px' }} />,
+            endAdornment: username && <CheckIcon color="primary" />, // Mostrar "visto" si el campo tiene valor
+          }}
+        />
+        <TextField
+          label="Apellido del Personal"
           variant="outlined"
           fullWidth
           margin="normal"
@@ -130,17 +142,22 @@ export function RegisterForm({ handleSubmit }: any) {
             endAdornment: password && validatePassword(password) && <CheckIcon color="primary" />, // Mostrar "visto" si la contraseña es válida
           }}
         />
-
         {/* Cuadro de validación de la contraseña */}
         {password && (
           <Box sx={{ marginTop: 1, padding: 1, backgroundColor: passwordValid ? 'lightgreen' : 'lightcoral', borderRadius: 1 }}>
             <Typography variant="body2" color={passwordValid ? 'green' : 'red'}>
               {passwordValid
                 ? 'La contraseña es válida (7-12 caracteres, y un carácter especial . / @).'
-                : 'La contraseña no cumple con los requisitos.'}
+                : 'La contraseña no cumple con los requisitos. '}
             </Typography>
           </Box>
         )}
+        {/* Mensaje de validación del correo electrónico */}
+        <Box sx={{ marginTop: 1 }}>
+          <Typography variant="body2" color={validateEmail(email) ? 'green' : 'red'}>
+            {validateEmail(email) ? 'El correo electrónico es válido.' : 'El correo electrónico no es válido.'}
+          </Typography>
+        </Box>
 
         <TextField
           label="Confirmar Contraseña"
@@ -157,7 +174,7 @@ export function RegisterForm({ handleSubmit }: any) {
             endAdornment: isPasswordMatch && <CheckIcon color="primary" />, // Mostrar "visto" si las contraseñas coinciden
           }}
         />
-        
+
         {/* Mensaje de coincidencia de contraseñas */}
         {confirmPassword && (
           <Box sx={{ marginTop: 1 }}>
@@ -172,7 +189,7 @@ export function RegisterForm({ handleSubmit }: any) {
           Registrar
         </Button>
       </form>
-      <Footer /> 
+      <Footer />
     </Box>
   );
 }

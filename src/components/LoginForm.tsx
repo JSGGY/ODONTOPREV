@@ -23,7 +23,7 @@ export function LoginForm({ handleSubmit }: any) {
   // Función para validar la contraseña
   const validatePassword = (password: string) => {
     // Expresión regular modificada
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.\-/@])[A-Za-z\d.\-/@]{7,}$/;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{7,}$/;
     return regex.test(password);
   };
 
@@ -50,6 +50,7 @@ export function LoginForm({ handleSubmit }: any) {
     }
   }, [email, password]);
 
+  
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(''); // Limpiar error de login

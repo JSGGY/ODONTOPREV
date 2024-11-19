@@ -14,8 +14,7 @@ const router = createBrowserRouter([
         element: <Login />
       }
     ]
-
-  }
+  },
 ]);
 
 function App() {
