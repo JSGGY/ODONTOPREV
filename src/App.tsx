@@ -1,26 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import './App.css'
-import RootLayout from "./pages/Root";
-import Login from "./pages/LoginPage";
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes';  // El archivo que tiene las rutas
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <RootLayout />,
-    children: [
-      {
-        index: true,
-        path: "login",
-        element: <Login />
-      }
-    ]
+const App: React.FC = () => {
+  return (
+    <Router>
+      {/* Asegúrate de que las rutas están dentro del Router */}
+      <AppRoutes />
+    </Router>
+  );
+};
 
-  }
-]);
-
-function App() {
-  return <RouterProvider router={router} />;
-}
-
-export default App
-
+export default App;

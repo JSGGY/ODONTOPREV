@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { MailIcon, LockIcon, LogInIcon } from 'lucide-react';
-import CryptoJS from 'crypto-js';  // Importamos crypto-js para el hashing
-import { supabase } from '../supabase/supabaseClient';  // Asegúrate de que supabase esté correctamente configurado
+import CryptoJS from 'crypto-js';  // Importamos crypto-js para el hashing // Asegúrate de que supabase esté correctamente configurado
 import { Logo } from './Logo';  // Asegúrate de tener este componente
 import { Footer } from './Footer';  // Asegúrate de tener este componente
 
