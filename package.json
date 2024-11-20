@@ -13,14 +13,17 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@fontsource/poppins": "^5.1.0",
+    "@mui/icons-material": "^6.1.7",
     "@mui/material": "^6.1.7",
     "@supabase/supabase-js": "^2.46.1",
-    "cors": "^2.8.5",
+    "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
     "express": "^4.21.1",
     "framer-motion": "^11.11.16",
     "lucide-react": "^0.456.0",
     "react": "^18.3.1",
+    "react-calendar": "^5.1.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "react-transition-group": "^4.4.5"
