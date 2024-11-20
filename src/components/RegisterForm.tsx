@@ -122,18 +122,6 @@ export function RegisterForm({ handleSubmit }: any) {
           }}
         />
         <TextField
-          label="Apellido del Personal"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          InputProps={{
-            startAdornment: <UserIcon style={{ marginRight: '8px' }} />,
-            endAdornment: username && <CheckIcon color="primary" />,
-          }}
-        />
-        <TextField
           label="Correo Electrónico"
           placeholder="ejemplo@dominio.com"
           variant="outlined"

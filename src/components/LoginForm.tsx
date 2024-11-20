@@ -28,11 +28,6 @@ export function LoginForm({ handleSubmit }: any) {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{7,}$/;
     return regex.test(password);
   };
-  // Función para validar la contraseña
-  const validatePassword = (password: string) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[.\-/@])[A-Za-z\d.\-/@]{7,}$/;
-    return regex.test(password);
-  };
 
   // Verificamos si el formulario es válido
   useEffect(() => {
