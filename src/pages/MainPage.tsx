@@ -45,7 +45,7 @@ const Dashboard = () => {
     setMenuAnchor(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (action) => {
     setMenuAnchor(null);
     setActiveModule(null);
   };
@@ -55,7 +55,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: themeColor , overflow : "hidden"}}>
+    <Box sx={{ display: "flex", backgroundColor: themeColor, overflow: "hidden" }}>
       {/* Menú Lateral */}
       <Drawer
         variant="permanent"
@@ -65,24 +65,24 @@ const Dashboard = () => {
             width: "100%",
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: "#FFCC80",
+            backgroundColor: "#87cee0",
             overflow: "hidden",
           },
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", mr: 3, ml: 2 }}>
-          <MedicalInformation sx={{ color: "#ffffff", mr: 1 }} /> {/* Ícono de Servicios Dentales */}
-<Typography variant="h5" sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '1.5rem' }}>
-  DentalPro
-</Typography>
+        <Box className="flex items-center mr-4 ml-2">
+          <img src="/src/assets/logo_RCD.png" alt="Logo RCD" className="h-10 w-10 mr-2" />
+          <Typography variant="h5" sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '1.5rem' }}>
+            RCD
+          </Typography>
         </Box>
 
         {/* Lista de navegación */}
         <List sx={{ display: "flex", flexGrow: 1, alignItems: "center" }}>
           {[{ name: "Citas", icon: <CalendarMonth /> },
-            { name: "Pacientes", icon: <Group /> },
-            { name: "Tratamientos", icon: <EventAvailable /> },
-            { name: "Facturación", icon: <MonetizationOn /> },
+          { name: "Pacientes", icon: <Group /> },
+          { name: "Tratamientos", icon: <EventAvailable /> },
+          { name: "Facturación", icon: <MonetizationOn /> },
           ].map((item, index) => (
             <React.Fragment key={index}>
               <ListItem sx={{ width: "auto", justifyContent: "center", mr: 3 }}>
@@ -103,7 +103,7 @@ const Dashboard = () => {
                   }}
                 >
                   {item.name}
-                  {item.name === "Tratamientos" && <ArrowDropDown />}
+                  {item.name === "Tratamientos"}
                 </Typography>
               </ListItem>
               {index < 3 && (
@@ -119,21 +119,21 @@ const Dashboard = () => {
 
         {/* Barra de usuario */}
         <Box sx={{ display: "flex", alignItems: "center", ml: "auto", mr: 2 }}>
-  {/* IconButton con color personalizado */}
-  <IconButton sx={{ color: "#ff7c7c" }}> {/* Aquí cambiamos el color del icono */}
-    <Notifications />
-  </IconButton>
+          {/* IconButton con color personalizado */}
+          <IconButton sx={{ color: "#ff7c7c" }}> {/* Aquí cambiamos el color del icono */}
+            <Notifications />
+          </IconButton>
 
-  {/* Nombre del doctor con color personalizado */}
-  <Typography variant="body1" sx={{ ml: 2, color: "#ffffff" }}> {/* Aquí cambiamos el color del texto */}
-    Dr. María García
-  </Typography>
+          {/* Nombre del doctor con color personalizado */}
+          <Typography variant="body1" sx={{ ml: 2, color: "#ffffff" }}> {/* Aquí cambiamos el color del texto */}
+            Dr. Juan Sotomayor
+          </Typography>
 
-  {/* Avatar con fondo personalizado */}
-  <Avatar sx={{ bgcolor: "#392eff", ml: 1, color: "#fff" }}> {/* Aquí cambiamos el color de fondo y texto del avatar */}
-    MG
-  </Avatar>
-</Box>
+          {/* Avatar con fondo personalizado */}
+          <Avatar sx={{ bgcolor: "#392eff", ml: 1, color: "#fff" }}> {/* Aquí cambiamos el color de fondo y texto del avatar */}
+            JS
+          </Avatar>
+        </Box>
 
       </Drawer>
 
@@ -153,6 +153,7 @@ const Dashboard = () => {
         )}
         {activeModule === "Citas" && (
           <>
+            <MenuItem onClick={handleMenuClose}>Agendar Cita</MenuItem>
             <MenuItem onClick={handleMenuClose}>Reprogramar Cita</MenuItem>
             <MenuItem onClick={handleMenuClose}>Eliminar Cita</MenuItem>
           </>
@@ -208,49 +209,49 @@ const Dashboard = () => {
         <Box sx={{ mt: 2 }}>
           {/* Tarjetas de Métricas */}
           <Grid container spacing={3}>
-          {[{ title: "Pacientes Totales", value: 2845, icon: <Group sx={{ color: "#4caf50" }} />, growth: "+12%" },
-  { title: "Citas este Mes", value: 184, icon: <EventAvailable sx={{ color: "#ff9800" }} />, growth: "+8%" },
-  { title: "Ingresos Mensuales", value: "$24,500", icon: <MonetizationOn sx={{ color: "#2196f3" }} />, growth: "+15%" }]
-    .map((card, index) => (
-      <Grid item xs={12} sm={4} key={index}>
-        <Card sx={{ backgroundColor: "#ffffff", color: "#000000", position: "relative" }}>
-          <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-            {/* Icono en la parte superior izquierda */}
-            <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
-              {card.icon}
-            </Box>
+            {[{ title: "Pacientes Totales", value: 2845, icon: <Group sx={{ color: "#4caf50" }} />, growth: "+12%" },
+            { title: "Citas este Mes", value: 184, icon: <EventAvailable sx={{ color: "#ff9800" }} />, growth: "+8%" },
+            { title: "Ingresos Mensuales", value: "$24,500", icon: <MonetizationOn sx={{ color: "#2196f3" }} />, growth: "+15%" }]
+              .map((card, index) => (
+                <Grid item xs={12} sm={4} key={index}>
+                  <Card sx={{ backgroundColor: "#ffffff", color: "#000000", position: "relative" }}>
+                    <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                      {/* Icono en la parte superior izquierda */}
+                      <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
+                        {card.icon}
+                      </Box>
 
-            {/* Título en la parte central izquierda */}
-            <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", mt: 1 }}>
-              <Typography variant="body2" sx={{ color: "gray", fontSize: "0.9rem" }}>
-                {card.title}
-              </Typography>
-            </Box>
+                      {/* Título en la parte central izquierda */}
+                      <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", mt: 1 }}>
+                        <Typography variant="body2" sx={{ color: "gray", fontSize: "0.9rem" }}>
+                          {card.title}
+                        </Typography>
+                      </Box>
 
-            {/* Valor en la parte inferior izquierda */}
-            <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", mt: 1 }}>
-              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                {card.value}
-              </Typography>
-            </Box>
+                      {/* Valor en la parte inferior izquierda */}
+                      <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", mt: 1 }}>
+                        <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                          {card.value}
+                        </Typography>
+                      </Box>
 
-            {/* Porcentaje alineado a la derecha superior */}
-            <Box sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              color: "green",
-              fontWeight: "bold"
-            }}>
-              <Typography variant="subtitle2">
-                {card.growth}
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
-      </Grid>
-    ))}
-</Grid>
+                      {/* Porcentaje alineado a la derecha superior */}
+                      <Box sx={{
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        color: "green",
+                        fontWeight: "bold"
+                      }}>
+                        <Typography variant="subtitle2">
+                          {card.growth}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+          </Grid>
 
 
 
@@ -265,7 +266,7 @@ const Dashboard = () => {
                   </Typography>
                   <List>
                     {[{ name: "Ana Martínez", treatment: "Limpieza Dental", time: "09:00" },
-                      { name: "Carlos Ruiz", treatment: "Extracción", time: "10:30" }]
+                    { name: "Carlos Ruiz", treatment: "Extracción", time: "10:30" }]
                       .map((appointment, index) => (
                         <ListItem key={index}>
                           <ListItemAvatar>

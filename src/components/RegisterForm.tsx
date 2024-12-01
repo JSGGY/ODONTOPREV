@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
 import { MailIcon, LockIcon, UserIcon, CheckIcon } from 'lucide-react';
 import { Footer } from './Footer';  // Asegúrate de tener este componente
 import { Logo } from './Logo';  // Asegúrate de tener este componente
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export function RegisterForm({ handleSubmit }: any) {
-  const [email, setEmail] = useState<string>('');
+  const [username, setName] = useState<string>(''); // Aquí sigue existiendo para el formulario, pero no en la validación
+  const [userLastName, setUserLastName] = useState<string>(''); // Aquí sigue existiendo para el formulario, pero no en la validación
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [username, setUsername] = useState<string>(''); // Aquí sigue existiendo para el formulario, pero no en la validación
-  const [registerError, setRegisterError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string>('');
+  const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>(true);
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [registerError, setRegisterError] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
-  const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>(true); // Valor inicial verdadero
   const [passwordValid, setPasswordValid] = useState<boolean>(true); // Valor inicial válido
   const [isFormValid, setIsFormValid] = useState<boolean>(false); // Valor inicial falso
 
@@ -30,16 +34,25 @@ export function RegisterForm({ handleSubmit }: any) {
     return regex.test(email);
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleClickShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+
   // Verificación de contraseñas coincidentes
   useEffect(() => {
     const isEmailValid = validateEmail(email);
     const isPasswordValidCheck = validatePassword(password);
-    
-    setIsPasswordMatch(password === confirmPassword); // Verificar que las contraseñas coincidan
+
     setPasswordValid(isPasswordValidCheck);  // Verificar la validez de la contraseña
 
-    // El formulario es válido si el correo, la contraseña y la confirmación de contraseña son válidos
-    setIsFormValid(isEmailValid && isPasswordValidCheck && isPasswordMatch);
+    const match = password === confirmPassword;
+    setIsPasswordMatch(match);
+
 
     // Validar el correo electrónico
     if (!isEmailValid) {
@@ -55,14 +68,18 @@ export function RegisterForm({ handleSubmit }: any) {
       setPasswordError('');
     }
 
-    // Validación de confirmación de contraseña
     if (!isPasswordMatch) {
       setConfirmPasswordError('Las contraseñas no coinciden');
     } else {
       setConfirmPasswordError('');
     }
+    setIsFormValid(isEmailValid && isPasswordValidCheck && isPasswordMatch);
+
+    console.log("Arguments Password and Email: ", isEmailValid, isPasswordValidCheck, isPasswordMatch);
   }, [email, password, confirmPassword]);
 
+
+  // Funcion para enviar los datos al servidor
   // Función para manejar el registro
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,7 +120,7 @@ export function RegisterForm({ handleSubmit }: any) {
           fullWidth
           margin="normal"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           InputProps={{
             startAdornment: <UserIcon style={{ marginRight: '8px' }} />,
             endAdornment: username && <CheckIcon color="primary" />, // Mostrar "visto" si el campo tiene valor
@@ -114,11 +131,11 @@ export function RegisterForm({ handleSubmit }: any) {
           variant="outlined"
           fullWidth
           margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={userLastName}
+          onChange={(e) => setUserLastName(e.target.value)}
           InputProps={{
             startAdornment: <UserIcon style={{ marginRight: '8px' }} />,
-            endAdornment: username && <CheckIcon color="primary" />,
+            endAdornment: userLastName && <CheckIcon color="primary" />,
           }}
         />
         <TextField
@@ -136,10 +153,17 @@ export function RegisterForm({ handleSubmit }: any) {
             endAdornment: validateEmail(email) && <CheckIcon color="primary" />,
           }}
         />
+
+        {/* Mensaje de validación del correo electrónico */}
+        <Box sx={{ marginTop: 1 }}>
+          <Typography variant="body2" color={validateEmail(email) ? 'green' : 'red'}>
+            {validateEmail(email) ? 'El correo electrónico es válido.' : 'El correo electrónico no es válido.'}
+          </Typography>
+        </Box>
+
         <TextField
           label="Contraseña"
-          placeholder="Entre 7 y 12 caracteres, con un carácter especial (./@)"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           variant="outlined"
           fullWidth
           margin="normal"
@@ -149,7 +173,14 @@ export function RegisterForm({ handleSubmit }: any) {
           helperText={passwordError}
           InputProps={{
             startAdornment: <LockIcon style={{ marginRight: '8px' }} />,
-            endAdornment: password && validatePassword(password) && <CheckIcon color="primary" />,
+            endAdornment: (
+              <>
+                {password && validatePassword(password) && <CheckIcon color="primary" />}
+                <IconButton onClick={handleClickShowPassword}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </>
+            ),
           }}
         />
         {password && (
@@ -161,35 +192,36 @@ export function RegisterForm({ handleSubmit }: any) {
             </Typography>
           </Box>
         )}
-        {/* Mensaje de validación del correo electrónico */}
-        <Box sx={{ marginTop: 1 }}>
-          <Typography variant="body2" color={validateEmail(email) ? 'green' : 'red'}>
-            {validateEmail(email) ? 'El correo electrónico es válido.' : 'El correo electrónico no es válido.'}
-          </Typography>
-        </Box>
+
 
         <TextField
           label="Confirmar Contraseña"
-          type="password"
+          type={showConfirmPassword ? 'text' : 'password'}
           variant="outlined"
           fullWidth
           margin="normal"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          error={!!confirmPasswordError}
-          helperText={confirmPasswordError}
+          error={!isPasswordMatch && confirmPassword.length > 0}
+          helperText={!isPasswordMatch && confirmPassword.length > 0 ? 'Las contraseñas no coinciden' : ''}
           InputProps={{
             startAdornment: <LockIcon style={{ marginRight: '8px' }} />,
-            endAdornment: isPasswordMatch && <CheckIcon color="primary" />,
+            endAdornment: (
+              <>
+                {isPasswordMatch && confirmPassword && <CheckIcon color="primary" />}
+                <IconButton onClick={handleClickShowConfirmPassword}>
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </>
+            ),
           }}
         />
-
 
         {/* Mensaje de coincidencia de contraseñas */}
         {confirmPassword && (
           <Box sx={{ marginTop: 1 }}>
             <Typography variant="body2" color={isPasswordMatch ? 'green' : 'red'}>
-              {isPasswordMatch ? 'Las contraseñas coinciden.' : 'Las contraseñas no coinciden.'}
+              {isPasswordMatch ? 'Las contraseñas coinciden' : 'Las contraseñas no coinciden.'}
             </Typography>
           </Box>
         )}
@@ -198,6 +230,7 @@ export function RegisterForm({ handleSubmit }: any) {
         <Button type="submit" variant="contained" color="primary" fullWidth disabled={!isFormValid}>
           Registrar
         </Button>
+
       </form>
       <Footer />
       <Footer />
